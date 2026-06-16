@@ -1,0 +1,57 @@
+<div class="section instagram color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="section-header" data-reveal>
+      {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading }}</h2>{%- endif -%}
+      {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}" class="link" target="_blank" rel="noopener">{{ section.settings.handle }}</a>{%- endif -%}
+    </div>
+    <div class="grid instagram__grid" style="--cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link | default: settings.social_instagram | default: '#' }}" class="instagram__item media media--ratio" target="_blank" rel="noopener" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ section.settings.heading | escape }}" width="300" height="300" loading="lazy">
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+          <span class="instagram__icon">{% render 'icon', name: 'instagram', size: 24 %}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .instagram__grid { grid-template-columns: repeat(var(--cols, 6), 1fr); }
+  .instagram__item { --card-ratio: 1 / 1; }
+  .instagram__icon { position: absolute; inset: 0; margin: auto; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #fff; background: rgba(0,0,0,0.35); border-radius: 50%; opacity: 0; transition: opacity var(--t-base); }
+  .instagram__item:hover .instagram__icon { opacity: 1; }
+  .instagram__item img { transition: transform var(--t-slow) var(--ease-out); }
+  .instagram__item:hover img { transform: scale(1.06); }
+  @media (max-width: 989px) { .instagram__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .instagram__grid { grid-template-columns: repeat(2, 1fr); } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Instagram gallery",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Follow us on Instagram", "label": "Heading" },
+    { "type": "text", "id": "handle", "default": "@yourbrand", "label": "Handle" },
+    { "type": "range", "id": "columns", "min": 3, "max": 6, "step": 1, "default": 6, "label": "Columns" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    { "type": "post", "name": "Post", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [
+    { "name": "Instagram gallery", "blocks": [{ "type": "post" }, { "type": "post" }, { "type": "post" }, { "type": "post" }, { "type": "post" }, { "type": "post" }] }
+  ]
+}
+{% endschema %}

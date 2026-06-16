@@ -1,0 +1,41 @@
+{%- comment -%} Server-rendered when called via the Product Recommendations route; otherwise lazy-loaded by JS. {%- endcomment -%}
+<section class="section product-recommendations" data-recommendations
+  data-url="{{ routes.product_recommendations_url }}" data-product-id="{{ product.id }}"
+  data-section-id="{{ section.id }}" data-limit="{{ section.settings.limit }}"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <div class="page-width">
+      <div class="section-header" data-reveal><h2>{{ section.settings.heading }}</h2></div>
+      <div class="grid product-grid" style="--cols: {{ section.settings.columns }};">
+        {%- for product in recommendations.products -%}{% render 'product-card', product: product %}{%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<script>
+  (function () {
+    var el = document.currentScript.previousElementSibling;
+    if (!el || el.querySelector('.product-grid')) return; // already server-rendered
+    var url = el.dataset.url + '?section_id=' + el.dataset.sectionId + '&product_id=' + el.dataset.productId + '&limit=' + el.dataset.limit;
+    fetch(url).then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var fresh = doc.querySelector('[data-recommendations] .page-width');
+      if (fresh) { el.innerHTML = ''; el.appendChild(fresh); el.querySelectorAll('[data-reveal]').forEach(function (n) { n.classList.add('is-visible'); }); }
+    }).catch(function () {});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "You may also like", "label": "Heading" },
+    { "type": "range", "id": "limit", "min": 2, "max": 10, "step": 1, "default": 4, "label": "Products to show" },
+    { "type": "range", "id": "columns", "min": 2, "max": 5, "step": 1, "default": 4, "label": "Columns" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32, "label": "Padding bottom" }
+  ],
+  "presets": [{ "name": "Product recommendations" }]
+}
+{% endschema %}

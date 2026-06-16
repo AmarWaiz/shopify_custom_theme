@@ -1,0 +1,20 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg-1": { "type": "message", "settings": { "text": "Free shipping on orders over $75" } },
+        "msg-2": { "type": "message", "settings": { "text": "30-day easy returns" } }
+      },
+      "block_order": ["msg-1", "msg-2"],
+      "settings": {}
+    },
+    "header": {
+      "type": "header",
+      "settings": {}
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

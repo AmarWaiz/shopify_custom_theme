@@ -1,0 +1,4 @@
+{%- comment -%} Cart count bubble. Re-rendered via Section Rendering API. {%- endcomment -%}
+{% render 'icon', name: 'cart' %}
+<span class="cart-bubble__count{% if cart.item_count == 0 %} is-empty{% endif %}" aria-hidden="true">{{ cart.item_count }}</span>
+<span class="visually-hidden">{{ 'accessibility.cart_count' | t: count: cart.item_count }}</span>

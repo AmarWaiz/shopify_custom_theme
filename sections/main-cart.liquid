@@ -1,0 +1,84 @@
+<section class="section main-cart" data-cart-section="main-cart">
+  <div class="page-width">
+    <h1 class="main-cart__title">{{ 'cart.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" class="cart">
+        <div class="cart__items">
+          <div class="cart__head hide-mobile">
+            <span>Product</span><span>Quantity</span><span>Total</span>
+          </div>
+          {%- for item in cart.items -%}
+            <div class="cart__row">
+              <div class="cart__product">
+                <a href="{{ item.url }}" class="cart__img media">{%- if item.image -%}<img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" width="100" height="125" loading="lazy">{%- endif -%}</a>
+                <div>
+                  <a href="{{ item.url }}" class="cart__name">{{ item.product.title }}</a>
+                  {%- unless item.product.has_only_default_variant -%}<p class="text-muted">{{ item.variant.title }}</p>{%- endunless -%}
+                  <p class="cart__unit text-muted">{{ item.original_price | money }}</p>
+                  {%- if item.line_level_discount_allocations.size > 0 -%}
+                    {%- for d in item.line_level_discount_allocations -%}<p class="cart__discount">{{ d.discount_application.title }} (−{{ d.amount | money }})</p>{%- endfor -%}
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="cart__qty">
+                <div class="qty" data-qty>
+                  <button type="button" class="qty__btn" data-qty-btn="minus" aria-label="-">{% render 'icon', name: 'minus', size: 14 %}</button>
+                  <input type="number" data-cart-qty data-line="{{ forloop.index }}" value="{{ item.quantity }}" min="0" aria-label="{{ 'cart.quantity' | t }}">
+                  <button type="button" class="qty__btn" data-qty-btn="plus" aria-label="+">{% render 'icon', name: 'plus', size: 14 %}</button>
+                </div>
+                <button type="button" class="link cart__remove" data-cart-remove="{{ forloop.index }}">{{ 'cart.remove' | t }}</button>
+              </div>
+              <div class="cart__total">{{ item.final_line_price | money }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <aside class="cart__summary">
+          {%- if settings.cart_show_note -%}
+            <div class="field"><label class="field__label" for="cart-note">{{ 'cart.note' | t }}</label><textarea id="cart-note" name="note">{{ cart.note }}</textarea></div>
+          {%- endif -%}
+          <div class="cart__subtotal"><span>{{ 'cart.subtotal' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            {%- for d in cart.cart_level_discount_applications -%}<p class="cart__discount">{{ d.title }} (−{{ d.total_allocated_amount | money }})</p>{%- endfor -%}
+          {%- endif -%}
+          <p class="text-muted cart__tax">{{ 'cart.taxes_shipping_at_checkout' | t }}</p>
+          <button type="submit" name="checkout" class="btn btn--full">{{ 'cart.checkout' | t }}</button>
+          <a href="{{ routes.all_products_collection_url }}" class="link cart__continue">{{ 'cart.continue_shopping' | t }}</a>
+        </aside>
+      </form>
+    {%- else -%}
+      <div class="cart__empty"><p>{{ 'cart.empty' | t }}</p><a href="{{ routes.all_products_collection_url }}" class="btn">{{ 'cart.continue_shopping' | t }}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .main-cart__title { margin-bottom: 2rem; }
+  .cart { display: grid; grid-template-columns: 1fr 340px; gap: 2.5rem; align-items: start; }
+  .cart__head { display: grid; grid-template-columns: 1fr auto auto; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); font-size: var(--font-sm); color: var(--color-text-soft); }
+  .cart__row { display: grid; grid-template-columns: 1fr auto auto; gap: 1.5rem; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--color-border); }
+  .cart__product { display: flex; gap: 1rem; }
+  .cart__img { width: 90px; height: 112px; border-radius: var(--radius); flex-shrink: 0; }
+  .cart__name { font-weight: 500; }
+  .cart__unit { font-size: var(--font-sm); margin-top: 0.25rem; }
+  .cart__discount { color: var(--color-success); font-size: var(--font-sm); }
+  .cart__qty { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+  .cart__remove { font-size: var(--font-xs); color: var(--color-text-soft); }
+  .cart__total { font-weight: 600; min-width: 80px; text-align: right; }
+  .cart__summary { position: sticky; top: 90px; background: var(--color-bg-soft); border-radius: var(--radius); padding: 1.5rem; }
+  .cart__subtotal { display: flex; justify-content: space-between; font-size: 1.15rem; margin-bottom: 0.5rem; }
+  .cart__tax { font-size: var(--font-xs); margin-bottom: 1rem; }
+  .cart__continue { display: block; text-align: center; margin-top: 1rem; }
+  .cart__empty { text-align: center; padding: 4rem 0; display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+  @media (max-width: 749px) {
+    .cart { grid-template-columns: 1fr; }
+    .cart__row { grid-template-columns: 1fr auto; }
+    .cart__total { grid-column: 2; }
+    .cart__summary { position: static; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

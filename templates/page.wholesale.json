@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "intro": { "type": "rich-text", "settings": { "color_scheme": "soft" } },
+    "benefits": { "type": "multicolumn", "settings": { "heading": "Why partner with us" } },
+    "form": { "type": "contact-form", "settings": { "heading": "Apply for a wholesale account", "button_label": "Submit application" } },
+    "logos": { "type": "logo-list", "settings": { "heading": "Trusted by" } }
+  },
+  "order": ["intro", "benefits", "form", "logos"]
+}

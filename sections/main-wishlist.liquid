@@ -1,0 +1,98 @@
+{%- comment -%}
+  Self-contained wishlist page. Reads product handles from localStorage
+  ('aurora:wishlist', written by the Wishlist module in global.js) and renders
+  each product card client-side via /products/{handle}?section_id=card-product.
+{%- endcomment -%}
+{%- capture remove_icon -%}{% render 'icon', name: 'close', size: 16 %}{%- endcapture -%}
+<section class="section main-wishlist" data-wishlist-page
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="section-header">
+      <h1>{{ section.settings.heading }}</h1>
+      {%- if section.settings.subheading != blank -%}<p class="text-muted">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+
+    <div class="grid product-grid main-wishlist__grid" data-wishlist-grid style="--cols: {{ section.settings.columns }};" hidden></div>
+
+    <div class="main-wishlist__empty" data-wishlist-empty>
+      <p>{{ section.settings.empty_text }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn">{{ section.settings.empty_button_label }}</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var KEY = 'aurora:wishlist';
+    var section = document.currentScript.closest('.main-wishlist');
+    var grid = section.querySelector('[data-wishlist-grid]');
+    var empty = section.querySelector('[data-wishlist-empty]');
+    var REMOVE_ICON = {{ remove_icon | json }};
+    var stylesInjected = false;
+
+    function getHandles() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; }
+    }
+
+    function showEmpty() {
+      grid.hidden = true; grid.innerHTML = ''; empty.hidden = false;
+    }
+
+    function render() {
+      var handles = getHandles();
+      if (!handles.length) { showEmpty(); return; }
+      empty.hidden = true;
+
+      Promise.all(handles.map(function (h) {
+        return fetch('/products/' + encodeURIComponent(h) + '?section_id=card-product')
+          .then(function (r) { return r.ok ? r.text() : ''; })
+          .catch(function () { return ''; });
+      })).then(function (htmls) {
+        var out = '';
+        htmls.forEach(function (html, i) {
+          if (!html) return;
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          // Card styles ship inline via {% raw %}{% style %}{% endraw %}; pull them in once.
+          if (!stylesInjected) {
+            var styleTag = doc.querySelector('style');
+            if (styleTag) { document.head.appendChild(styleTag); stylesInjected = true; }
+          }
+          var card = doc.querySelector('.card');
+          if (!card) return;
+          card.classList.add('is-visible');
+          out += '<div class="wishlist-card">' + card.outerHTML +
+            '<button type="button" class="wishlist-card__remove icon-btn" data-wishlist-remove="' +
+            handles[i].replace(/"/g, '&quot;') + '" aria-label="Remove from wishlist">' + REMOVE_ICON + '</button></div>';
+        });
+        if (out) { grid.innerHTML = out; grid.hidden = false; empty.hidden = true; }
+        else { showEmpty(); }
+      });
+    }
+
+    render();
+    if (window.theme && window.theme.events) window.theme.events.on('wishlist:updated', render);
+  })();
+</script>
+
+{% stylesheet %}
+  .main-wishlist__grid { margin-top: 1.5rem; }
+  .wishlist-card { position: relative; }
+  .wishlist-card__remove { position: absolute; top: 10px; right: 10px; z-index: 3; background: var(--color-bg); border-radius: 999px; box-shadow: var(--shadow-sm); width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
+  .wishlist-card__remove:hover { color: var(--color-accent); }
+  .main-wishlist__empty { text-align: center; padding: 4rem 0; display: flex; flex-direction: column; gap: 1.25rem; align-items: center; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Your wishlist", "label": "Heading" },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "range", "id": "columns", "min": 2, "max": 5, "step": 1, "default": 4, "label": "Columns" },
+    { "type": "text", "id": "empty_text", "default": "Your wishlist is empty. Tap the heart on any product to save it here.", "label": "Empty state text" },
+    { "type": "text", "id": "empty_button_label", "default": "Continue shopping", "label": "Empty state button label" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ]
+}
+{% endschema %}

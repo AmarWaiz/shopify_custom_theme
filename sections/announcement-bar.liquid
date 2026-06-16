@@ -1,0 +1,71 @@
+<div class="announcement" style="background: {{ section.settings.bg }}; color: {{ section.settings.text }};">
+  <div class="announcement__inner page-width">
+    <div class="announcement__messages" data-announcement-track>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'message' -%}
+          <div class="announcement__msg" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.text }}</a>{%- else -%}<span>{{ block.settings.text }}</span>{%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="announcement__locale">
+      {%- if section.settings.show_locale and shop.published_locales.size > 1 -%}
+        {%- form 'localization', class: 'locale-form' -%}
+          <select name="locale_code" onchange="this.form.submit()" aria-label="Language">
+            {%- for loc in localization.available_languages -%}
+              <option value="{{ loc.iso_code }}" {% if loc.iso_code == localization.language.iso_code %}selected{% endif %}>{{ loc.endonym_name | capitalize }}</option>
+            {%- endfor -%}
+          </select>
+        {%- endform -%}
+      {%- endif -%}
+      {%- if section.settings.show_country and localization.available_countries.size > 1 -%}
+        {%- form 'localization', class: 'locale-form' -%}
+          <select name="country_code" onchange="this.form.submit()" aria-label="Country">
+            {%- for country in localization.available_countries -%}
+              <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>{{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})</option>
+            {%- endfor -%}
+          </select>
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .announcement { font-size: var(--font-sm); }
+  .announcement__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 40px; }
+  .announcement__messages { flex: 1; overflow: hidden; }
+  .announcement__msg { text-align: center; }
+  .announcement__msg + .announcement__msg { display: none; }
+  .announcement__locale { display: flex; gap: 0.5rem; }
+  .announcement__locale select { background: transparent; border: none; color: inherit; font-size: var(--font-xs); cursor: pointer; padding: 4px; }
+  .announcement__locale option { color: #000; }
+  @media (max-width: 749px) { .announcement__locale { display: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    { "type": "color", "id": "bg", "default": "#191919", "label": "Background" },
+    { "type": "color", "id": "text", "default": "#FFFFFF", "label": "Text" },
+    { "type": "checkbox", "id": "show_country", "default": true, "label": "Show country/currency selector" },
+    { "type": "checkbox", "id": "show_locale", "default": true, "label": "Show language selector" }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "text", "default": "Free shipping on orders over $75", "label": "Text" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Announcement bar", "blocks": [{ "type": "message" }] }
+  ]
+}
+{% endschema %}

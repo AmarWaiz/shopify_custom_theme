@@ -1,0 +1,76 @@
+<article class="section main-article">
+  <div class="page-width page-width--narrow">
+    {%- if settings.show_breadcrumbs -%}
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">{{ shop.name }}</a><span aria-hidden="true">/</span><a href="{{ blog.url }}">{{ blog.title }}</a><span aria-hidden="true">/</span><span>{{ article.title }}</span></nav>
+    {%- endif -%}
+
+    <header class="article-header text-center">
+      {%- if article.tags.size > 0 -%}<p class="eyebrow">{{ article.tags.first }}</p>{%- endif -%}
+      <h1>{{ article.title }}</h1>
+      <p class="article-header__meta text-muted">{{ article.published_at | date: '%B %d, %Y' }}{% if section.settings.show_author %} · {{ 'blog.by_author' | t: author: article.author }}{% endif %}</p>
+    </header>
+
+    {%- if article.image and section.settings.show_image -%}
+      <div class="article-hero media"><img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.image.alt | escape | default: article.title | escape }}" width="1400" height="800" loading="eager"></div>
+    {%- endif -%}
+
+    <div class="article-body rte">{{ article.content }}</div>
+
+    {%- if section.settings.show_share -%}
+      <div class="article-share">
+        <span class="text-muted">{{ 'products.product.share' | t }}:</span>
+        <a href="https://www.facebook.com/sharer.php?u={{ shop.url | append: article.url }}" target="_blank" rel="noopener" aria-label="Facebook">{% render 'icon', name: 'facebook', size: 18 %}</a>
+        <a href="https://twitter.com/intent/tweet?url={{ shop.url | append: article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="X">{% render 'icon', name: 'x', size: 18 %}</a>
+        <a href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: article.url }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Pinterest">{% render 'icon', name: 'pinterest', size: 18 %}</a>
+      </div>
+    {%- endif -%}
+
+    {%- if blog.comments_enabled? -%}
+      <div class="article-comments">
+        <h2 class="h4">{{ 'blog.article_comments' | t }} ({{ article.comments_count }})</h2>
+        {%- if article.comments_count > 0 -%}
+          {%- for comment in article.comments -%}
+            <div class="comment"><p class="comment__meta"><strong>{{ comment.author }}</strong> · {{ comment.created_at | date: '%b %d, %Y' }}</p><div class="rte">{{ comment.content }}</div></div>
+          {%- endfor -%}
+        {%- endif -%}
+        {%- form 'new_comment', article, class: 'comment-form' -%}
+          {%- if form.posted_successfully? -%}<p class="comment-form__success">{{ 'blog.moderated' | t }}</p>{%- endif -%}
+          <h3 class="h5">{{ 'blog.comment_form_title' | t }}</h3>
+          <div class="comment-form__row">
+            <div class="field"><label class="field__label" for="c-name">{{ 'blog.comment_form_name' | t }}</label><input id="c-name" type="text" name="comment[author]" required></div>
+            <div class="field"><label class="field__label" for="c-email">{{ 'blog.comment_form_email' | t }}</label><input id="c-email" type="email" name="comment[email]" required></div>
+          </div>
+          <div class="field"><label class="field__label" for="c-body">{{ 'blog.comment_form_body' | t }}</label><textarea id="c-body" name="comment[body]" required></textarea></div>
+          <button type="submit" class="btn">{{ 'blog.comment_form_submit' | t }}</button>
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+{% stylesheet %}
+  .article-header { margin: 1.5rem 0 2rem; }
+  .article-header__meta { margin-top: 0.75rem; }
+  .article-hero { aspect-ratio: 16 / 9; border-radius: var(--radius); margin-bottom: 2.5rem; }
+  .article-body { font-size: 1.075rem; line-height: 1.8; }
+  .article-body p, .article-body h2, .article-body h3, .article-body ul, .article-body ol { margin-bottom: 1.25rem; }
+  .article-share { display: flex; align-items: center; gap: 0.75rem; margin: 2.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+  .article-comments { margin-top: 3rem; }
+  .comment { padding: 1.25rem 0; border-bottom: 1px solid var(--color-border); }
+  .comment__meta { font-size: var(--font-sm); color: var(--color-text-soft); margin-bottom: 0.5rem; }
+  .comment-form { margin-top: 2rem; }
+  .comment-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .comment-form__success { color: var(--color-success); margin-bottom: 1rem; }
+  @media (max-width: 600px) { .comment-form__row { grid-template-columns: 1fr; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    { "type": "checkbox", "id": "show_image", "default": true, "label": "Show featured image" },
+    { "type": "checkbox", "id": "show_author", "default": true, "label": "Show author" },
+    { "type": "checkbox", "id": "show_share", "default": true, "label": "Show share buttons" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "faq": { "type": "faq", "settings": { "heading": "Frequently asked questions" } },
+    "contact_cta": { "type": "rich-text", "settings": { "color_scheme": "soft" } }
+  },
+  "order": ["faq", "contact_cta"]
+}

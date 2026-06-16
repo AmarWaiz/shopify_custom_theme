@@ -1,0 +1,48 @@
+<div class="section rich-text color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width page-width--narrow text-{{ section.settings.alignment }}" data-reveal>
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'eyebrow' -%}<p class="eyebrow">{{ block.settings.text }}</p>
+        {%- when 'heading' -%}<h2 class="rich-text__heading">{{ block.settings.text }}</h2>
+        {%- when 'text' -%}<div class="rte rich-text__body">{{ block.settings.text }}</div>
+        {%- when 'button' -%}<a href="{{ block.settings.link }}" class="btn rich-text__btn">{{ block.settings.label }}</a>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .rich-text .text-center { margin-inline: auto; }
+  .rich-text__heading { margin-bottom: 1rem; }
+  .rich-text__body { font-size: 1.05rem; color: var(--color-text-soft); }
+  .rich-text__btn { margin-top: 1.5rem; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Rich text",
+  "settings": [
+    { "type": "select", "id": "alignment", "label": "Alignment", "options": [
+      { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }
+    ], "default": "center" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }, { "value": "dark", "label": "Dark" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Eyebrow", "settings": [{ "type": "text", "id": "text", "default": "Our story", "label": "Text" }] },
+    { "type": "heading", "name": "Heading", "settings": [{ "type": "text", "id": "text", "default": "Crafted with intention", "label": "Text" }] },
+    { "type": "text", "name": "Text", "settings": [{ "type": "richtext", "id": "text", "default": "<p>Share your brand story, mission, or values with your customers.</p>", "label": "Text" }] },
+    { "type": "button", "name": "Button", "settings": [
+      { "type": "text", "id": "label", "default": "Learn more", "label": "Label" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [
+    { "name": "Rich text", "blocks": [{ "type": "eyebrow" }, { "type": "heading" }, { "type": "text" }, { "type": "button" }] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,11 @@
+<div class="account account__narrow page-width">
+  <h1>{{ 'customers.register.title' | t }}</h1>
+  <p class="text-muted text-center">Set a password to activate your account.</p>
+  {%- form 'activate_customer_password' -%}
+    {%- if form.errors -%}<div class="account__errors">{{ form.errors | default_errors }}</div>{%- endif -%}
+    <div class="field"><label class="field__label" for="a-pass">{{ 'customers.register.password' | t }}</label><input type="password" id="a-pass" name="customer[password]" autocomplete="new-password" required></div>
+    <div class="field"><label class="field__label" for="a-confirm">Confirm password</label><input type="password" id="a-confirm" name="customer[password_confirmation]" autocomplete="new-password" required></div>
+    <button type="submit" class="btn btn--full">Activate</button>
+    <button type="submit" name="decline" class="btn btn--secondary btn--full" style="margin-top:0.5rem;">Decline invitation</button>
+  {%- endform -%}
+</div>

@@ -1,0 +1,28 @@
+{%- comment -%} Shared address form fields. Param: form (from customer_address form) {%- endcomment -%}
+<div class="contact-form__row">
+  <div class="field"><label class="field__label" for="addr-first-{{ form.id }}">{{ 'customers.addresses.first_name' | t }}</label><input type="text" id="addr-first-{{ form.id }}" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name"></div>
+  <div class="field"><label class="field__label" for="addr-last-{{ form.id }}">{{ 'customers.addresses.last_name' | t }}</label><input type="text" id="addr-last-{{ form.id }}" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name"></div>
+</div>
+<div class="field"><label class="field__label" for="addr-company-{{ form.id }}">{{ 'customers.addresses.company' | t }}</label><input type="text" id="addr-company-{{ form.id }}" name="address[company]" value="{{ form.company }}"></div>
+<div class="field"><label class="field__label" for="addr-1-{{ form.id }}">{{ 'customers.addresses.address1' | t }}</label><input type="text" id="addr-1-{{ form.id }}" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1"></div>
+<div class="field"><label class="field__label" for="addr-2-{{ form.id }}">{{ 'customers.addresses.address2' | t }}</label><input type="text" id="addr-2-{{ form.id }}" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2"></div>
+<div class="contact-form__row">
+  <div class="field"><label class="field__label" for="addr-city-{{ form.id }}">{{ 'customers.addresses.city' | t }}</label><input type="text" id="addr-city-{{ form.id }}" name="address[city]" value="{{ form.city }}" autocomplete="address-level2"></div>
+  <div class="field"><label class="field__label" for="addr-zip-{{ form.id }}">{{ 'customers.addresses.zip' | t }}</label><input type="text" id="addr-zip-{{ form.id }}" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code"></div>
+</div>
+<div class="contact-form__row">
+  <div class="field">
+    <label class="field__label" for="addr-country-{{ form.id }}">{{ 'customers.addresses.country' | t }}</label>
+    <select id="addr-country-{{ form.id }}" name="address[country]" data-default="{{ form.country }}">{{ all_country_option_tags }}</select>
+  </div>
+  <div class="field" id="addr-province-wrap-{{ form.id }}">
+    <label class="field__label" for="addr-province-{{ form.id }}">{{ 'customers.addresses.province' | t }}</label>
+    <select id="addr-province-{{ form.id }}" name="address[province]" data-default="{{ form.province }}"></select>
+  </div>
+</div>
+<div class="field"><label class="field__label" for="addr-phone-{{ form.id }}">{{ 'customers.addresses.phone' | t }}</label><input type="tel" id="addr-phone-{{ form.id }}" name="address[phone]" value="{{ form.phone }}" autocomplete="tel"></div>
+<label class="facet__opt" style="margin-bottom:1rem;"><input type="checkbox" name="address[default]" value="1">{{ 'customers.addresses.set_default' | t }}</label>
+
+<script>
+  new Shopify.CountryProvinceSelector('addr-country-{{ form.id }}', 'addr-province-{{ form.id }}', { hideElement: 'addr-province-wrap-{{ form.id }}' });
+</script>

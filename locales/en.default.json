@@ -1,0 +1,208 @@
+{
+  "general": {
+    "page": "Page",
+    "tagged": "Tagged",
+    "view_all": "View all",
+    "close": "Close",
+    "menu": "Menu",
+    "loading": "Loading",
+    "newsletter": {
+      "label": "Email",
+      "placeholder": "Enter your email",
+      "button": "Subscribe",
+      "success": "Thanks for subscribing!"
+    },
+    "social": { "follow": "Follow us" },
+    "pagination": { "previous": "Previous", "next": "Next" }
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close": "Close",
+    "open_cart": "Open cart",
+    "open_menu": "Open menu",
+    "open_search": "Open search",
+    "previous": "Previous slide",
+    "next": "Next slide",
+    "cart_count": "{{ count }} items in cart"
+  },
+  "404": {
+    "title": "Page not found",
+    "not_found": "The page you were looking for does not exist.",
+    "back_to_shopping": "Continue shopping"
+  },
+  "blog": {
+    "all_topics": "All topics",
+    "by_author": "by {{ author }}",
+    "read_more": "Read more",
+    "comments": "{{ count }} comments",
+    "article_comments": "Comments",
+    "article_metadata_html": "{{ date }} by {{ author }}",
+    "comment_form_body": "Comment",
+    "comment_form_email": "Email",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Post comment",
+    "comment_form_title": "Leave a comment",
+    "moderated": "Comments are moderated before publishing."
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue shopping",
+    "checkout": "Checkout",
+    "update": "Update",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "taxes_shipping_at_checkout": "Taxes and shipping calculated at checkout",
+    "note": "Order note",
+    "discount": "Discount code",
+    "apply": "Apply",
+    "quantity": "Quantity",
+    "free_shipping_progress_html": "You're {{ amount }} away from free shipping!",
+    "free_shipping_qualified": "Congratulations! You've earned free shipping.",
+    "recommendations": "You may also like"
+  },
+  "customers": {
+    "account": {
+      "title": "My account",
+      "details": "Account details",
+      "view_addresses": "View addresses",
+      "order_history": "Order history",
+      "no_orders": "You haven't placed any orders yet.",
+      "logout": "Log out"
+    },
+    "orders": {
+      "title": "Order history",
+      "order_number": "Order",
+      "date": "Date",
+      "payment_status": "Payment",
+      "fulfillment_status": "Fulfillment",
+      "total": "Total"
+    },
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "forgot_password": "Forgot your password?",
+      "submit": "Sign in",
+      "guest_title": "Continue as guest",
+      "guest_continue": "Continue",
+      "create_account": "Create account"
+    },
+    "register": {
+      "title": "Create account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create"
+    },
+    "recover_password": {
+      "title": "Reset your password",
+      "subtext": "We'll send you an email to reset your password.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "cancel": "Cancel",
+      "success": "We've sent you an email with a link to reset your password."
+    },
+    "addresses": {
+      "title": "Addresses",
+      "add": "Add address",
+      "edit": "Edit",
+      "delete": "Delete",
+      "default": "Default address",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "company": "Company",
+      "address1": "Address",
+      "address2": "Apartment, suite, etc.",
+      "city": "City",
+      "country": "Country/region",
+      "province": "Province",
+      "zip": "Postal/ZIP code",
+      "phone": "Phone",
+      "set_default": "Set as default",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "collections": {
+    "title": "Collections",
+    "all_products": "All products",
+    "sort_by": "Sort by",
+    "filter": "Filter",
+    "filters": "Filters",
+    "clear": "Clear",
+    "clear_all": "Clear all",
+    "apply": "Apply",
+    "product_count": "{{ count }} products",
+    "empty": "No products found",
+    "availability": "Availability",
+    "price": "Price",
+    "in_stock": "In stock",
+    "out_of_stock": "Out of stock",
+    "from": "From",
+    "to": "To"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "adding": "Adding…",
+      "added": "Added ✓",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "on_sale": "Sale",
+      "new": "New",
+      "save_html": "Save {{ amount }}",
+      "quantity": "Quantity",
+      "vendor": "Brand",
+      "sku": "SKU",
+      "in_stock": "In stock",
+      "low_stock": "Only {{ count }} left",
+      "out_of_stock": "Out of stock",
+      "description": "Description",
+      "details": "Details",
+      "shipping": "Shipping & returns",
+      "share": "Share",
+      "quick_view": "Quick view",
+      "view_details": "View details",
+      "choose_options": "Choose options",
+      "related": "You may also like",
+      "recently_viewed": "Recently viewed",
+      "from_price_html": "From {{ price }}"
+    },
+    "facets": {
+      "sort_best_selling": "Best selling",
+      "sort_featured": "Featured",
+      "sort_price_asc": "Price, low to high",
+      "sort_price_desc": "Price, high to low",
+      "sort_date_new": "Newest",
+      "sort_date_old": "Oldest"
+    }
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Add to Apple Wallet",
+    "card": "Gift card",
+    "expired": "This gift card has expired",
+    "expires_on": "Expires on {{ expires_on }}",
+    "use_at_checkout": "Use this gift card at checkout"
+  },
+  "password": {
+    "title": "Opening soon",
+    "password": "Password",
+    "enter": "Enter",
+    "subtext": "Enter the store password to continue",
+    "powered_by": "This shop will be powered by Shopify"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search products, articles, pages…",
+    "submit": "Search",
+    "results_count_html": "{{ count }} results for \"{{ terms }}\"",
+    "no_results_html": "No results found for \"{{ terms }}\".",
+    "products": "Products",
+    "collections": "Collections",
+    "pages": "Pages",
+    "articles": "Articles",
+    "view_all_results": "View all results"
+  }
+}

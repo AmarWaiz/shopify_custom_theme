@@ -1,0 +1,40 @@
+{
+  "current": {
+    "color_bg": "#FFFFFF",
+    "color_bg_soft": "#F6F4EF",
+    "color_text": "#191919",
+    "color_text_soft": "#5C5C5C",
+    "color_accent": "#C8A96B",
+    "color_border": "#E6E3DD",
+    "color_btn_bg": "#191919",
+    "color_btn_text": "#FFFFFF",
+    "color_sale": "#B23A48",
+    "color_success": "#2E7D32",
+    "font_heading": "playfair_display_n4",
+    "font_body": "inter_n4",
+    "font_heading_scale": 100,
+    "font_body_size": 16,
+    "heading_transform": "none",
+    "page_width": 1400,
+    "spacing_sections": 64,
+    "grid_gap": 20,
+    "corner_radius": "6px",
+    "card_image_ratio": "3/4",
+    "card_show_vendor": false,
+    "card_show_second_image": true,
+    "card_quick_add": true,
+    "card_show_rating": true,
+    "cart_type": "drawer",
+    "cart_show_note": true,
+    "cart_show_recommendations": true,
+    "cart_free_shipping_bar": true,
+    "cart_free_shipping_threshold": 75,
+    "predictive_search": true,
+    "search_show_collections": true,
+    "search_show_pages": true,
+    "show_breadcrumbs": true
+  },
+  "presets": {
+    "Aurora": {}
+  }
+}

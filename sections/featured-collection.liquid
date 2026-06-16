@@ -1,0 +1,58 @@
+{%- liquid
+  assign collection = collections[section.settings.collection]
+  assign limit = section.settings.products_to_show
+-%}
+<div class="section featured-collection color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="section-header" data-reveal>
+      {%- if section.settings.subheading != blank -%}<p class="eyebrow">{{ section.settings.subheading }}</p>{%- endif -%}
+      {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading }}</h2>{%- endif -%}
+    </div>
+
+    <div class="grid product-grid" style="--cols: {{ section.settings.columns }};">
+      {%- if collection.products.size > 0 -%}
+        {%- for product in collection.products limit: limit -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..limit) -%}
+          <div class="card" data-reveal>
+            <div class="media media--ratio">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            <div class="card__info"><h3 class="card__title h6">Example product</h3><div class="price"><span class="price__current">$0.00</span></div></div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_view_all and collection.url -%}
+      <div class="section-header__cta text-center"><a href="{{ collection.url }}" class="btn btn--secondary">{{ 'general.view_all' | t }}</a></div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-grid { grid-template-columns: repeat(var(--cols, 4), 1fr); }
+  @media (max-width: 989px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 749px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "heading", "default": "Featured products", "label": "Heading" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "min": 2, "max": 12, "step": 1, "default": 8, "label": "Products to show" },
+    { "type": "range", "id": "columns", "min": 2, "max": 5, "step": 1, "default": 4, "label": "Columns (desktop)" },
+    { "type": "checkbox", "id": "show_view_all", "default": true, "label": "Show 'View all' button" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft background" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

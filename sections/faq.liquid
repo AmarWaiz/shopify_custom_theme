@@ -1,0 +1,50 @@
+<div class="section faq color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width page-width--narrow">
+    {%- if section.settings.heading != blank -%}<div class="section-header" data-reveal><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="faq__list">
+      {%- for block in section.blocks -%}
+        <details class="faq__item" data-reveal {{ block.shopify_attributes }}{% if forloop.first and section.settings.open_first %} open{% endif %}>
+          <summary class="faq__q">
+            <span>{{ block.settings.question }}</span>
+            {% render 'icon', name: 'plus', size: 20 %}
+          </summary>
+          <div class="faq__a rte">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .faq__item { border-bottom: 1px solid var(--color-border); }
+  .faq__q { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 0; cursor: pointer; font-weight: 500; font-size: 1.05rem; list-style: none; }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q svg { flex-shrink: 0; transition: transform var(--t-base) var(--ease-out); }
+  .faq__item[open] .faq__q svg { transform: rotate(45deg); }
+  .faq__a { padding-bottom: 1.25rem; color: var(--color-text-soft); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Frequently asked questions", "label": "Heading" },
+    { "type": "checkbox", "id": "open_first", "default": true, "label": "Open first item by default" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    { "type": "item", "name": "Question", "settings": [
+      { "type": "text", "id": "question", "default": "What is your return policy?", "label": "Question" },
+      { "type": "richtext", "id": "answer", "default": "<p>We accept returns within 30 days of delivery.</p>", "label": "Answer" }
+    ] }
+  ],
+  "presets": [
+    { "name": "FAQ", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "content": { "type": "main-page", "settings": { "narrow": true } },
+    "faq": { "type": "faq", "settings": { "heading": "Fit & sizing questions" } }
+  },
+  "order": ["content", "faq"]
+}

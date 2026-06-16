@@ -1,0 +1,30 @@
+{%- comment -%} Reusable blog article card. Param: article {%- endcomment -%}
+<article class="article-card" data-reveal>
+  <a href="{{ article.url }}" class="article-card__media media media--ratio">
+    {%- if article.image -%}
+      <img src="{{ article.image | image_url: width: 800 }}" alt="{{ article.image.alt | escape | default: article.title | escape }}" width="400" height="500" loading="lazy">
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </a>
+  <div class="article-card__info">
+    {%- if article.tags.size > 0 -%}<p class="eyebrow">{{ article.tags.first }}</p>{%- endif -%}
+    <h3 class="h5"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+    <p class="article-card__meta text-muted">{{ article.published_at | date: '%b %d, %Y' }}{% if article.author %} · {{ 'blog.by_author' | t: author: article.author }}{% endif %}</p>
+    {%- if article.excerpt_or_content != blank -%}<p class="article-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 18 }}</p>{%- endif -%}
+    <a href="{{ article.url }}" class="link article-card__link">{{ 'blog.read_more' | t }}</a>
+  </div>
+</article>
+
+{%- unless article_card_styles -%}
+  {%- assign article_card_styles = true -%}
+  {% style %}
+    .article-card { display: flex; flex-direction: column; }
+    .article-card__info { padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .article-card__meta { font-size: var(--font-xs); }
+    .article-card__excerpt { color: var(--color-text-soft); font-size: var(--font-sm); }
+    .article-card__link { margin-top: 0.4rem; }
+    .article-card__media img { transition: transform var(--t-slow) var(--ease-out); }
+    .article-card:hover .article-card__media img { transform: scale(1.04); }
+  {% endstyle %}
+{%- endunless -%}

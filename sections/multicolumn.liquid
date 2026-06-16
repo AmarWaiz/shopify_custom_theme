@@ -1,0 +1,60 @@
+<div class="section multicolumn color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}<div class="section-header" data-reveal><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="grid multicolumn__grid" style="--cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        <div class="multicolumn__item text-{{ section.settings.alignment }}" data-reveal style="transition-delay: {{ forloop.index0 | times: 0.08 }}s" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="multicolumn__icon"><img src="{{ block.settings.image | image_url: width: 160 }}" alt="" width="64" height="64" loading="lazy"></div>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}<h3 class="h5">{{ block.settings.heading }}</h3>{%- endif -%}
+          {%- if block.settings.text != blank -%}<div class="rte text-muted">{{ block.settings.text }}</div>{%- endif -%}
+          {%- if block.settings.link_label != blank -%}<a href="{{ block.settings.link }}" class="link">{{ block.settings.link_label }}</a>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .multicolumn__grid { grid-template-columns: repeat(var(--cols, 3), 1fr); }
+  .multicolumn__item.text-center { align-items: center; }
+  .multicolumn__item > * + * { margin-top: 0.6rem; }
+  .multicolumn__icon img { width: 56px; height: 56px; object-fit: contain; }
+  .multicolumn__item.text-center .multicolumn__icon { margin-inline: auto; }
+  @media (max-width: 749px) { .multicolumn__grid { grid-template-columns: 1fr; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Why shop with us", "label": "Heading" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "default": 3, "label": "Columns" },
+    { "type": "select", "id": "alignment", "label": "Alignment", "options": [
+      { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }
+    ], "default": "center" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "soft" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    {
+      "type": "column", "name": "Column",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Icon / image" },
+        { "type": "text", "id": "heading", "default": "Free shipping", "label": "Heading" },
+        { "type": "richtext", "id": "text", "default": "<p>On all orders over $75.</p>", "label": "Text" },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Multicolumn", "blocks": [{ "type": "column" }, { "type": "column" }, { "type": "column" }] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,44 @@
+<div class="section contact color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width page-width--narrow">
+    {%- if section.settings.heading != blank -%}<div class="section-header" data-reveal><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    {%- form 'contact', class: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="contact-form__success">{{ section.settings.success_text }}</p>
+      {%- elsif form.errors -%}
+        <p class="contact-form__error">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+      <div class="contact-form__row">
+        <div class="field"><label class="field__label" for="cf-name">{{ 'customers.register.first_name' | t }}</label><input id="cf-name" type="text" name="contact[name]" required></div>
+        <div class="field"><label class="field__label" for="cf-email">{{ 'general.newsletter.label' | t }}</label><input id="cf-email" type="email" name="contact[email]" required></div>
+      </div>
+      <div class="field"><label class="field__label" for="cf-phone">{{ 'customers.addresses.phone' | t }}</label><input id="cf-phone" type="tel" name="contact[phone]"></div>
+      <div class="field"><label class="field__label" for="cf-body">{{ 'blog.comment_form_body' | t }}</label><textarea id="cf-body" name="contact[body]" required></textarea></div>
+      <button type="submit" class="btn">{{ section.settings.button_label }}</button>
+    {%- endform -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .contact-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .contact-form__success { color: var(--color-success); margin-bottom: 1rem; }
+  .contact-form__error { color: var(--color-sale); margin-bottom: 1rem; }
+  @media (max-width: 600px) { .contact-form__row { grid-template-columns: 1fr; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Get in touch", "label": "Heading" },
+    { "type": "text", "id": "button_label", "default": "Send message", "label": "Button label" },
+    { "type": "text", "id": "success_text", "default": "Thanks! We'll be in touch shortly.", "label": "Success message" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

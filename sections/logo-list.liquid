@@ -1,0 +1,48 @@
+<div class="section logo-list color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}<div class="section-header" data-reveal><p class="eyebrow">{{ section.settings.heading }}</p></div>{%- endif -%}
+    <div class="logo-list__track" data-reveal>
+      {%- for block in section.blocks -%}
+        <div class="logo-list__item" {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.image.alt | escape }}" width="120" height="60" loading="lazy">
+          {%- else -%}
+            {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+          {%- if block.settings.link != blank -%}</a>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .logo-list__track { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(2rem, 5vw, 4rem); }
+  .logo-list__item img { max-height: 48px; width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.6; transition: filter var(--t-base), opacity var(--t-base); }
+  .logo-list__item:hover img { filter: grayscale(0); opacity: 1; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Logo list",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "As seen in", "label": "Heading" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 48, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 48, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    { "type": "logo", "name": "Logo", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Logo" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [
+    { "name": "Logo list", "blocks": [{ "type": "logo" }, { "type": "logo" }, { "type": "logo" }, { "type": "logo" }, { "type": "logo" }] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,62 @@
+<div class="section testimonials color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}<div class="section-header" data-reveal><h2>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="grid testimonials__grid" style="--cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        <figure class="testimonial" data-reveal style="transition-delay: {{ forloop.index0 | times: 0.08 }}s" {{ block.shopify_attributes }}>
+          <div class="testimonial__stars" aria-label="{{ block.settings.rating }} out of 5">
+            {%- for i in (1..5) -%}<span class="{% if i <= block.settings.rating %}is-on{% endif %}">{% render 'icon', name: 'star', size: 16 %}</span>{%- endfor -%}
+          </div>
+          <blockquote class="testimonial__quote">{{ block.settings.quote }}</blockquote>
+          <figcaption class="testimonial__author">
+            {%- if block.settings.avatar != blank -%}<img src="{{ block.settings.avatar | image_url: width: 80 }}" alt="" width="40" height="40" loading="lazy">{%- endif -%}
+            <span><strong>{{ block.settings.name }}</strong>{% if block.settings.role != blank %}<br><small class="text-muted">{{ block.settings.role }}</small>{% endif %}</span>
+          </figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .testimonials__grid { grid-template-columns: repeat(var(--cols, 3), 1fr); }
+  .testimonial { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
+  .color-soft .testimonial { background: var(--color-bg); }
+  .testimonial__stars { display: flex; gap: 2px; color: var(--color-border); }
+  .testimonial__stars .is-on { color: var(--color-accent); }
+  .testimonial__quote { font-size: 1.05rem; line-height: 1.6; font-family: var(--font-heading); }
+  .testimonial__author { display: flex; align-items: center; gap: 0.75rem; margin-top: auto; }
+  .testimonial__author img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+  @media (max-width: 749px) { .testimonials__grid { grid-template-columns: 1fr; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "What our customers say", "label": "Heading" },
+    { "type": "range", "id": "columns", "min": 1, "max": 4, "step": 1, "default": 3, "label": "Columns" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "soft" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    {
+      "type": "quote", "name": "Testimonial",
+      "settings": [
+        { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 1, "default": 5, "label": "Rating" },
+        { "type": "textarea", "id": "quote", "default": "Absolutely love the quality and the fit. Will be buying again!", "label": "Quote" },
+        { "type": "image_picker", "id": "avatar", "label": "Avatar" },
+        { "type": "text", "id": "name", "default": "Jane D.", "label": "Name" },
+        { "type": "text", "id": "role", "default": "Verified buyer", "label": "Role / detail" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Testimonials", "blocks": [{ "type": "quote" }, { "type": "quote" }, { "type": "quote" }] }
+  ]
+}
+{% endschema %}

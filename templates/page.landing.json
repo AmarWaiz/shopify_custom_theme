@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slider",
+      "blocks": { "s1": { "type": "slide", "settings": { "heading": "Limited drop", "subheading": "Exclusive", "button_label": "Shop the drop" } } },
+      "block_order": ["s1"],
+      "settings": { "height": 75 }
+    },
+    "featured": { "type": "featured-collection", "settings": { "heading": "Featured" } },
+    "highlight": { "type": "image-with-text", "settings": {} },
+    "benefits": { "type": "multicolumn", "settings": {} },
+    "testimonials": { "type": "testimonials", "settings": {} },
+    "faq": { "type": "faq", "settings": {} },
+    "newsletter": { "type": "newsletter", "settings": {} }
+  },
+  "order": ["hero", "featured", "highlight", "benefits", "testimonials", "faq", "newsletter"]
+}

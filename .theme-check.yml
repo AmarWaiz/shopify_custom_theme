@@ -1,0 +1,8 @@
+extends: theme-check:recommended
+
+# Aurora intentionally shares a global design system (assets/base.css) plus
+# reusable utility classes across sections, so the "scoped CSS class" rule
+# (which expects every class to be defined within the same section file)
+# produces false positives. Disable it; all other recommended checks stay on.
+ValidScopedCSSClass:
+  enabled: false

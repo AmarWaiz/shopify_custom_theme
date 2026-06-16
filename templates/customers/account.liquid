@@ -1,0 +1,35 @@
+<div class="account page-width">
+  <h1 style="text-align:left;">{{ 'customers.account.title' | t }}</h1>
+  <div class="account-layout">
+    <nav class="account-nav">
+      <a href="{{ routes.account_url }}">{{ 'customers.account.title' | t }}</a>
+      <a href="{{ routes.account_addresses_url }}">{{ 'customers.account.view_addresses' | t }} ({{ customer.addresses_count }})</a>
+      <a href="{{ routes.account_logout_url }}">{{ 'customers.account.logout' | t }}</a>
+    </nav>
+    <div class="account-main">
+      <h2 class="h4">{{ 'customers.orders.title' | t }}</h2>
+      {%- if customer.orders.size > 0 -%}
+        <table class="account-table">
+          <thead><tr><th>{{ 'customers.orders.order_number' | t }}</th><th>{{ 'customers.orders.date' | t }}</th><th>{{ 'customers.orders.payment_status' | t }}</th><th>{{ 'customers.orders.fulfillment_status' | t }}</th><th>{{ 'customers.orders.total' | t }}</th></tr></thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr>
+                <td><a href="{{ order.customer_url }}" class="link">{{ order.name }}</a></td>
+                <td>{{ order.created_at | date: '%b %d, %Y' }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_net_amount | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      {%- else -%}
+        <p class="text-muted">{{ 'customers.account.no_orders' | t }}</p>
+      {%- endif -%}
+
+      <h2 class="h4" style="margin-top:2rem;">{{ 'customers.account.details' | t }}</h2>
+      <p>{{ customer.default_address.name }}<br>{{ customer.email }}</p>
+      {%- if customer.default_address -%}<address class="rte">{{ customer.default_address | format_address }}</address>{%- endif -%}
+    </div>
+  </div>
+</div>

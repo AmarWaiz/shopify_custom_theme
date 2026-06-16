@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "intro": { "type": "rich-text", "settings": { "color_scheme": "soft" } },
+    "story": { "type": "image-with-text", "settings": { "heading": "Our story" } },
+    "values": { "type": "multicolumn", "settings": { "heading": "Our values" } },
+    "team": { "type": "image-with-text", "settings": { "heading": "Meet the team", "layout": "text-first" } },
+    "newsletter": { "type": "newsletter", "settings": {} }
+  },
+  "order": ["intro", "story", "values", "team", "newsletter"]
+}

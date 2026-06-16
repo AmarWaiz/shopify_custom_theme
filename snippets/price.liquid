@@ -1,0 +1,38 @@
+{%- comment -%}
+  Renders product/variant pricing with sale & unit price handling.
+  Params: product (or variant via `target`), show_compare (default true)
+{%- endcomment -%}
+{%- liquid
+  assign target = target | default: product
+  assign on_sale = false
+  if target.compare_at_price > target.price
+    assign on_sale = true
+  endif
+-%}
+<div class="price{% if on_sale %} price--on-sale{% endif %}{% unless target.available %} price--sold-out{% endunless %}">
+  <span class="price__current">
+    {%- if target.price_varies and product.price_varies -%}
+      {{ 'products.product.from_price_html' | t: price: product.price_min | money }}
+    {%- else -%}
+      {{ target.price | money }}
+    {%- endif -%}
+  </span>
+  {%- if on_sale and show_compare != false -%}
+    <s class="price__compare">{{ target.compare_at_price | money }}</s>
+    {%- assign saved = target.compare_at_price | minus: target.price | times: 100 | divided_by: target.compare_at_price -%}
+    <span class="price__badge badge badge--sale">-{{ saved }}%</span>
+  {%- endif -%}
+  {%- if target.unit_price_measurement -%}
+    <span class="price__unit">{{ target.unit_price | money }}/{% if target.unit_price_measurement.reference_value != 1 %}{{ target.unit_price_measurement.reference_value }}{% endif %}{{ target.unit_price_measurement.reference_unit }}</span>
+  {%- endif -%}
+</div>
+{%- unless price_styles_loaded -%}
+  {%- assign price_styles_loaded = true -%}
+  {% style %}
+    .price { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+    .price__current { font-weight: 600; }
+    .price--on-sale .price__current { color: var(--color-sale); }
+    .price__compare { color: var(--color-text-soft); font-size: var(--font-sm); }
+    .price__unit { width: 100%; font-size: var(--font-xs); color: var(--color-text-soft); }
+  {% endstyle %}
+{%- endunless -%}

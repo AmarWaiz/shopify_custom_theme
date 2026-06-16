@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slider",
+      "blocks": {
+        "s1": { "type": "slide", "settings": { "heading": "Define your style", "subheading": "New Arrivals", "text": "Curated pieces for the modern wardrobe.", "button_label": "Shop now" } },
+        "s2": { "type": "slide", "settings": { "heading": "Timeless essentials", "subheading": "The Edit", "text": "Crafted to last, designed to love.", "button_label": "Explore" } }
+      },
+      "block_order": ["s1", "s2"],
+      "settings": {}
+    },
+    "categories": { "type": "collection-list", "settings": { "heading": "Shop by category" } },
+    "featured": { "type": "featured-collection", "settings": { "heading": "Best sellers", "subheading": "Trending now" } },
+    "promo": { "type": "image-with-text", "settings": {} },
+    "new_arrivals": { "type": "featured-collection", "settings": { "heading": "New arrivals", "subheading": "Just in" } },
+    "benefits": { "type": "multicolumn", "settings": {} },
+    "testimonials": { "type": "testimonials", "settings": {} },
+    "video": { "type": "video-section", "settings": {} },
+    "blog": { "type": "blog-posts", "settings": {} },
+    "logos": { "type": "logo-list", "settings": {} },
+    "newsletter": { "type": "newsletter", "settings": {} },
+    "instagram": { "type": "instagram-gallery", "settings": {} }
+  },
+  "order": [
+    "hero", "categories", "featured", "promo", "new_arrivals", "benefits",
+    "testimonials", "video", "blog", "logos", "newsletter", "instagram"
+  ]
+}

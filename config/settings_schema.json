@@ -1,0 +1,148 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Aurora",
+    "theme_version": "1.0.0",
+    "theme_author": "DK Digital Solutions",
+    "theme_documentation_url": "https://shopify.dev/themes",
+    "theme_support_url": "https://shopify.dev/themes"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "header", "content": "Brand" },
+      { "type": "color", "id": "color_bg", "default": "#FFFFFF", "label": "Background" },
+      { "type": "color", "id": "color_bg_soft", "default": "#F6F4EF", "label": "Soft background" },
+      { "type": "color", "id": "color_text", "default": "#191919", "label": "Text" },
+      { "type": "color", "id": "color_text_soft", "default": "#5C5C5C", "label": "Muted text" },
+      { "type": "color", "id": "color_accent", "default": "#C8A96B", "label": "Accent" },
+      { "type": "color", "id": "color_border", "default": "#E6E3DD", "label": "Borders" },
+      { "type": "header", "content": "Buttons" },
+      { "type": "color", "id": "color_btn_bg", "default": "#191919", "label": "Primary button background" },
+      { "type": "color", "id": "color_btn_text", "default": "#FFFFFF", "label": "Primary button text" },
+      { "type": "header", "content": "Sale & status" },
+      { "type": "color", "id": "color_sale", "default": "#B23A48", "label": "Sale / discount" },
+      { "type": "color", "id": "color_success", "default": "#2E7D32", "label": "In stock / success" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "font_heading", "default": "playfair_display_n4", "label": "Heading font" },
+      { "type": "font_picker", "id": "font_body", "default": "inter_n4", "label": "Body font" },
+      {
+        "type": "range", "id": "font_heading_scale", "min": 90, "max": 140, "step": 5, "unit": "%",
+        "default": 100, "label": "Heading size scale"
+      },
+      {
+        "type": "range", "id": "font_body_size", "min": 14, "max": 18, "step": 1, "unit": "px",
+        "default": 16, "label": "Base body size"
+      },
+      {
+        "type": "select", "id": "heading_transform", "label": "Heading case",
+        "options": [
+          { "value": "none", "label": "Normal" },
+          { "value": "uppercase", "label": "Uppercase" }
+        ],
+        "default": "none"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range", "id": "page_width", "min": 1000, "max": 1600, "step": 20, "unit": "px",
+        "default": 1400, "label": "Page width"
+      },
+      {
+        "type": "range", "id": "spacing_sections", "min": 0, "max": 120, "step": 4, "unit": "px",
+        "default": 64, "label": "Default space between sections"
+      },
+      {
+        "type": "range", "id": "grid_gap", "min": 8, "max": 40, "step": 2, "unit": "px",
+        "default": 20, "label": "Grid spacing"
+      },
+      {
+        "type": "select", "id": "corner_radius", "label": "Corner roundness",
+        "options": [
+          { "value": "0px", "label": "Sharp" },
+          { "value": "6px", "label": "Subtle" },
+          { "value": "12px", "label": "Rounded" }
+        ],
+        "default": "6px"
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "select", "id": "card_image_ratio", "label": "Image ratio",
+        "options": [
+          { "value": "adapt", "label": "Adapt to image" },
+          { "value": "1/1", "label": "Square" },
+          { "value": "3/4", "label": "Portrait" },
+          { "value": "4/3", "label": "Landscape" }
+        ],
+        "default": "3/4"
+      },
+      { "type": "checkbox", "id": "card_show_vendor", "default": false, "label": "Show vendor" },
+      { "type": "checkbox", "id": "card_show_second_image", "default": true, "label": "Show second image on hover" },
+      { "type": "checkbox", "id": "card_quick_add", "default": true, "label": "Show quick add to cart" },
+      { "type": "checkbox", "id": "card_show_rating", "default": true, "label": "Show product rating (metafield)" }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select", "id": "cart_type", "label": "Cart type",
+        "options": [
+          { "value": "drawer", "label": "Slide-out drawer" },
+          { "value": "page", "label": "Cart page" }
+        ],
+        "default": "drawer"
+      },
+      { "type": "checkbox", "id": "cart_show_note", "default": true, "label": "Enable order notes" },
+      { "type": "checkbox", "id": "cart_show_recommendations", "default": true, "label": "Show cart recommendations" },
+      { "type": "checkbox", "id": "cart_free_shipping_bar", "default": true, "label": "Show free-shipping progress bar" },
+      {
+        "type": "range", "id": "cart_free_shipping_threshold", "min": 0, "max": 500, "step": 5, "unit": "$",
+        "default": 75, "label": "Free shipping threshold (store currency)"
+      }
+    ]
+  },
+  {
+    "name": "Search",
+    "settings": [
+      { "type": "checkbox", "id": "predictive_search", "default": true, "label": "Enable predictive search" },
+      { "type": "checkbox", "id": "search_show_collections", "default": true, "label": "Suggest collections" },
+      { "type": "checkbox", "id": "search_show_pages", "default": true, "label": "Suggest pages & articles" }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_instagram", "label": "Instagram URL" },
+      { "type": "text", "id": "social_facebook", "label": "Facebook URL" },
+      { "type": "text", "id": "social_tiktok", "label": "TikTok URL" },
+      { "type": "text", "id": "social_youtube", "label": "YouTube URL" },
+      { "type": "text", "id": "social_x", "label": "X / Twitter URL" },
+      { "type": "text", "id": "social_pinterest", "label": "Pinterest URL" }
+    ]
+  },
+  {
+    "name": "Social sharing & SEO",
+    "settings": [
+      { "type": "checkbox", "id": "show_breadcrumbs", "default": true, "label": "Show breadcrumbs" },
+      { "type": "image_picker", "id": "share_image", "label": "Default social sharing image" }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon (32×32)" }
+    ]
+  }
+]

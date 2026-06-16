@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "title": { "type": "main-page", "settings": { "narrow": true } },
+    "form": { "type": "contact-form", "settings": { "heading": "Get in touch" } },
+    "faq": { "type": "faq", "settings": { "heading": "Common questions" } }
+  },
+  "order": ["title", "form", "faq"]
+}

@@ -1,0 +1,72 @@
+<div class="section collection-list color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-header" data-reveal><h2>{{ section.settings.heading }}</h2></div>
+    {%- endif -%}
+
+    <div class="grid collection-grid" style="--cols: {{ section.settings.columns }};">
+      {%- for block in section.blocks -%}
+        {%- assign coll = collections[block.settings.collection] -%}
+        <a href="{{ coll.url | default: '#' }}" class="collection-card" data-reveal style="transition-delay: {{ forloop.index0 | times: 0.08 }}s" {{ block.shopify_attributes }}>
+          <div class="collection-card__media media media--ratio">
+            {%- if block.settings.image != blank -%}
+              <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ coll.title | escape }}" width="400" height="500" loading="lazy">
+            {%- elsif coll.featured_image -%}
+              <img src="{{ coll.featured_image | image_url: width: 800 }}" alt="{{ coll.title | escape }}" width="400" height="500" loading="lazy">
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <div class="collection-card__overlay">
+              <h3 class="collection-card__title">{{ block.settings.title | default: coll.title | default: 'Collection' }}</h3>
+              <span class="link">{{ 'general.view_all' | t }} {% render 'icon', name: 'arrow-right', size: 16 %}</span>
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .collection-grid { grid-template-columns: repeat(var(--cols, 3), 1fr); }
+  .collection-card { color: #fff; }
+  .collection-card__media { border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base); }
+  .collection-card:hover .collection-card__media { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .collection-card img { transition: transform var(--t-slow) var(--ease-out); }
+  .collection-card:hover img { transform: scale(1.06); }
+  .collection-card__overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.75rem; background: linear-gradient(to top, rgba(0,0,0,0.65), transparent 70%); }
+  .collection-card__title { color: #fff; margin-bottom: 0.5rem; }
+  .collection-card__overlay .link { opacity: 0; transform: translateY(12px); transition: all var(--t-base) var(--ease-out); }
+  .collection-card:hover .collection-card__overlay .link { opacity: 1; transform: none; }
+  @media (max-width: 989px) { .collection-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 749px) { .collection-grid { grid-template-columns: 1fr; } .collection-card__overlay .link { opacity: 1; transform: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection list",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Shop by category", "label": "Heading" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "default": 3, "label": "Columns (desktop)" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft background" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "blocks": [
+    {
+      "type": "item", "name": "Collection",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "image", "label": "Custom image (optional)" },
+        { "type": "text", "id": "title", "label": "Custom title (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Collection list", "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }] }
+  ]
+}
+{% endschema %}

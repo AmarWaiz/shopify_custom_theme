@@ -1,0 +1,5 @@
+{%- comment -%} Isolated section so the cart count can refresh via the Section Rendering API. {%- endcomment -%}
+<span data-cart-section="cart-icon-bubble" class="cart-bubble">{% render 'cart-bubble' %}</span>
+{% schema %}
+{ "name": "Cart bubble" }
+{% endschema %}

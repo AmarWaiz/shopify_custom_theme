@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="{% if settings.font_body == 'rtl' %}rtl{% else %}ltr{% endif %}">
+  <head>
+    {% render 'meta-tags' %}
+    {% render 'css-variables' %}
+
+    {%- comment -%} Preconnect & preload critical fonts {%- endcomment -%}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    {%- unless settings.font_body.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+      {{ settings.font_body | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {%- endunless -%}
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    {%- comment -%} Storefront config consumed by global.js {%- endcomment -%}
+    <script>
+      window.theme = {
+        routes: {
+          cart_add: '{{ routes.cart_add_url }}.js',
+          cart_change: '{{ routes.cart_change_url }}.js',
+          cart_update: '{{ routes.cart_update_url }}.js',
+          cart_url: '{{ routes.cart_url }}',
+          predictive_search: '{{ routes.predictive_search_url }}'
+        },
+        moneyFormat: {{ shop.money_format | json }},
+        strings: {
+          adding: {{ 'products.product.adding' | t | json }},
+          added: {{ 'products.product.added' | t | json }},
+          error: {{ 'products.product.sold_out' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'global.js' | asset_url }}" defer></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ request.page_type | handle }}">
+    <a class="skip-to-content" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {%- comment -%} Cart drawer is always present so AJAX add can open it {%- endcomment -%}
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'cart-drawer' %}
+    {%- endif -%}
+  </body>
+</html>

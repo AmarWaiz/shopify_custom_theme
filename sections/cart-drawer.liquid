@@ -1,0 +1,109 @@
+{%- liquid
+  assign threshold = settings.cart_free_shipping_threshold | times: 100
+  assign remaining = threshold | minus: cart.total_price
+  assign progress = 0
+  if threshold > 0
+    assign progress = cart.total_price | times: 100 | divided_by: threshold
+    if progress > 100
+      assign progress = 100
+    endif
+  endif
+-%}
+<div id="cart-drawer" class="drawer cart-drawer" data-cart-section="cart-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'cart.title' | t }}">
+  <div class="drawer__header">
+    <h2 class="h4">{{ 'cart.title' | t }} <span class="text-muted">({{ cart.item_count }})</span></h2>
+    <button class="icon-btn" data-drawer-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', name: 'close' %}</button>
+  </div>
+
+  {%- if cart.item_count > 0 -%}
+    {%- if settings.cart_free_shipping_bar and threshold > 0 -%}
+      <div class="cart-drawer__shipping">
+        {%- if remaining > 0 -%}
+          {%- assign remaining_money = remaining | money -%}
+          <p>{{ 'cart.free_shipping_progress_html' | t: amount: remaining_money }}</p>
+        {%- else -%}
+          <p>{{ 'cart.free_shipping_qualified' | t }}</p>
+        {%- endif -%}
+        <div class="progress"><span style="width: {{ progress }}%"></span></div>
+      </div>
+    {%- endif -%}
+
+    <div class="drawer__body">
+      <ul class="cart-items">
+        {%- for item in cart.items -%}
+          <li class="cart-item">
+            <a href="{{ item.url }}" class="cart-item__media media">
+              {%- if item.image -%}<img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" width="80" height="100" loading="lazy">{%- endif -%}
+            </a>
+            <div class="cart-item__info">
+              <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}<p class="text-muted cart-item__variant">{{ item.variant.title }}</p>{%- endunless -%}
+              {%- if item.selling_plan_allocation -%}<p class="text-muted">{{ item.selling_plan_allocation.selling_plan.name }}</p>{%- endif -%}
+              <div class="cart-item__bottom">
+                <div class="qty" data-qty>
+                  <button type="button" class="qty__btn" data-qty-btn="minus" aria-label="-">{% render 'icon', name: 'minus', size: 14 %}</button>
+                  <input type="number" data-cart-qty data-line="{{ forloop.index }}" value="{{ item.quantity }}" min="0" aria-label="{{ 'cart.quantity' | t }}">
+                  <button type="button" class="qty__btn" data-qty-btn="plus" aria-label="+">{% render 'icon', name: 'plus', size: 14 %}</button>
+                </div>
+                <span class="cart-item__price">{{ item.final_line_price | money }}</span>
+              </div>
+              <button type="button" class="cart-item__remove link" data-cart-remove="{{ forloop.index }}">{{ 'cart.remove' | t }}</button>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    <div class="drawer__footer">
+      {%- if settings.cart_show_note -%}
+        <details class="cart-note">
+          <summary>{{ 'cart.note' | t }}</summary>
+          <textarea name="note" form="cart-form" placeholder="{{ 'cart.note' | t }}">{{ cart.note }}</textarea>
+        </details>
+      {%- endif -%}
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form">
+        <div class="cart-drawer__subtotal">
+          <span>{{ 'cart.subtotal' | t }}</span>
+          <strong>{{ cart.total_price | money }}</strong>
+        </div>
+        <p class="cart-drawer__tax text-muted">{{ 'cart.taxes_shipping_at_checkout' | t }}</p>
+        <button type="submit" name="checkout" class="btn btn--full">{{ 'cart.checkout' | t }}</button>
+      </form>
+      <button class="link cart-drawer__continue" data-drawer-close>{{ 'cart.continue_shopping' | t }}</button>
+    </div>
+  {%- else -%}
+    <div class="drawer__body cart-drawer__empty">
+      <p>{{ 'cart.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn" data-drawer-close>{{ 'cart.continue_shopping' | t }}</a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cart-drawer__shipping { padding: 0.85rem var(--page-margin); background: var(--color-bg-soft); font-size: var(--font-sm); }
+  .cart-drawer__shipping p { margin-bottom: 0.5rem; }
+  .progress { height: 4px; background: var(--color-border); border-radius: 999px; overflow: hidden; }
+  .progress span { display: block; height: 100%; background: var(--color-accent); transition: width var(--t-slow) var(--ease-out); }
+  .cart-items { display: flex; flex-direction: column; gap: 1.25rem; }
+  .cart-item { display: grid; grid-template-columns: 80px 1fr; gap: 1rem; }
+  .cart-item__media { width: 80px; height: 100px; border-radius: var(--radius); }
+  .cart-item__title { font-weight: 500; }
+  .cart-item__variant { font-size: var(--font-xs); }
+  .cart-item__bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; }
+  .cart-item__price { font-weight: 600; }
+  .cart-item__remove { margin-top: 0.4rem; font-size: var(--font-xs); color: var(--color-text-soft); }
+  .qty { display: inline-flex; align-items: center; border: 1px solid var(--color-border); border-radius: var(--radius); }
+  .qty__btn { padding: 6px 8px; display: inline-flex; }
+  .qty input { width: 40px; text-align: center; border: none; padding: 6px 0; -moz-appearance: textfield; }
+  .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .cart-note summary { cursor: pointer; font-size: var(--font-sm); margin-bottom: 0.5rem; }
+  .cart-note textarea { width: 100%; min-height: 70px; border: 1px solid var(--color-border); border-radius: var(--radius); padding: 0.6rem; margin-bottom: 0.75rem; }
+  .cart-drawer__subtotal { display: flex; justify-content: space-between; font-size: 1.1rem; margin-bottom: 0.25rem; }
+  .cart-drawer__tax { font-size: var(--font-xs); margin-bottom: 0.75rem; }
+  .cart-drawer__continue { display: block; text-align: center; margin: 0.75rem auto 0; }
+  .cart-drawer__empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; text-align: center; }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Cart drawer" }
+{% endschema %}

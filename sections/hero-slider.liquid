@@ -1,0 +1,122 @@
+<div class="hero-slider" data-hero-slider style="--hero-min-height: {{ section.settings.height }}vh;">
+  <div class="hero-slider__track" data-slides>
+    {%- for block in section.blocks -%}
+      <div class="hero-slide" data-slide {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <img src="{{ block.settings.image | image_url: width: 2000 }}"
+               srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1400 }} 1400w, {{ block.settings.image | image_url: width: 2000 }} 2000w"
+               sizes="100vw" alt="{{ block.settings.heading | escape }}"
+               width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}"
+               loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" {% if forloop.first %}fetchpriority="high"{% endif %} class="hero-slide__img">
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg hero-slide__img' }}
+        {%- endif -%}
+        <div class="hero-slide__overlay" style="--ov: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+        <div class="hero-slide__content page-width align-{{ block.settings.alignment }}" style="color: {{ block.settings.text_color }};">
+          <div class="hero-slide__inner">
+            {%- if block.settings.subheading != blank -%}<p class="eyebrow hero-slide__eyebrow">{{ block.settings.subheading }}</p>{%- endif -%}
+            {%- if block.settings.heading != blank -%}<h2 class="hero-slide__heading">{{ block.settings.heading }}</h2>{%- endif -%}
+            {%- if block.settings.text != blank -%}<p class="hero-slide__text">{{ block.settings.text }}</p>{%- endif -%}
+            {%- if block.settings.button_label != blank -%}
+              <a href="{{ block.settings.button_link }}" class="btn">{{ block.settings.button_label }}</a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <button class="hero-slider__arrow hero-slider__arrow--prev" data-slide-prev aria-label="{{ 'accessibility.previous' | t }}">{% render 'icon', name: 'chevron-down', size: 22 %}</button>
+    <button class="hero-slider__arrow hero-slider__arrow--next" data-slide-next aria-label="{{ 'accessibility.next' | t }}">{% render 'icon', name: 'chevron-down', size: 22 %}</button>
+    <div class="hero-slider__dots" data-dots>
+      {%- for block in section.blocks -%}<button class="hero-slider__dot{% if forloop.first %} is-active{% endif %}" data-dot="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}"></button>{%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .hero-slider { position: relative; overflow: hidden; }
+  .hero-slider__track { display: flex; transition: transform var(--t-slow) var(--ease-out); }
+  .hero-slide { position: relative; flex: 0 0 100%; min-height: var(--hero-min-height, 80vh); display: grid; }
+  .hero-slide__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-slide__overlay { position: absolute; inset: 0; background: rgba(0,0,0,var(--ov, 0.2)); }
+  .hero-slide__content { position: relative; z-index: 2; display: flex; align-items: center; min-height: var(--hero-min-height, 80vh); padding-block: 3rem; }
+  .hero-slide__content.align-left { justify-content: flex-start; text-align: left; }
+  .hero-slide__content.align-center { justify-content: center; text-align: center; }
+  .hero-slide__content.align-right { justify-content: flex-end; text-align: right; }
+  .hero-slide__inner { max-width: 640px; }
+  .hero-slide__eyebrow { margin-bottom: 1rem; }
+  .hero-slide__heading { font-size: var(--font-h1); margin-bottom: 1rem; }
+  .hero-slide__text { font-size: 1.1rem; margin-bottom: 1.75rem; max-width: 46ch; }
+  [data-slide]:not(.is-active) .hero-slide__inner > * { opacity: 0; transform: translateY(20px); }
+  [data-slide].is-active .hero-slide__inner > * { opacity: 1; transform: none; transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out); }
+  [data-slide].is-active .hero-slide__inner > *:nth-child(2) { transition-delay: 0.1s; }
+  [data-slide].is-active .hero-slide__inner > *:nth-child(3) { transition-delay: 0.2s; }
+  [data-slide].is-active .hero-slide__inner > *:nth-child(4) { transition-delay: 0.3s; }
+  .hero-slider__arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; background: rgba(255,255,255,0.85); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #111; }
+  .hero-slider__arrow--prev { left: 1rem; rotate: 90deg; }
+  .hero-slider__arrow--next { right: 1rem; rotate: -90deg; }
+  .hero-slider__dots { position: absolute; bottom: 1.25rem; left: 0; right: 0; display: flex; justify-content: center; gap: 0.5rem; z-index: 3; }
+  .hero-slider__dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); transition: all var(--t-fast); }
+  .hero-slider__dot.is-active { background: #fff; width: 28px; border-radius: 999px; }
+  @media (max-width: 749px) { .hero-slide__text { font-size: 1rem; } .hero-slider__arrow { display: none; } }
+{% endstylesheet %}
+
+<script>
+  (function () {
+    var root = document.currentScript.previousElementSibling;
+    while (root && !root.matches('[data-hero-slider]')) { root = root.previousElementSibling; }
+    if (!root) return;
+    var track = root.querySelector('[data-slides]');
+    var slides = root.querySelectorAll('[data-slide]');
+    var dots = root.querySelectorAll('[data-dot]');
+    var i = 0, timer;
+    function go(n) {
+      i = (n + slides.length) % slides.length;
+      track.style.transform = 'translateX(-' + (i * 100) + '%)';
+      slides.forEach(function (s, idx) { s.classList.toggle('is-active', idx === i); });
+      dots.forEach(function (d, idx) { d.classList.toggle('is-active', idx === i); });
+    }
+    function auto() { if (slides.length > 1 && {{ section.settings.autoplay }}) timer = setInterval(function () { go(i + 1); }, {{ section.settings.autoplay_speed | times: 1000 }}); }
+    function stop() { clearInterval(timer); }
+    if (root.querySelector('[data-slide-next]')) root.querySelector('[data-slide-next]').addEventListener('click', function () { go(i + 1); stop(); auto(); });
+    if (root.querySelector('[data-slide-prev]')) root.querySelector('[data-slide-prev]').addEventListener('click', function () { go(i - 1); stop(); auto(); });
+    dots.forEach(function (d) { d.addEventListener('click', function () { go(parseInt(d.dataset.dot, 10)); stop(); auto(); }); });
+    go(0); auto();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero slider",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "range", "id": "height", "min": 40, "max": 100, "step": 5, "unit": "vh", "default": 85, "label": "Height" },
+    { "type": "checkbox", "id": "autoplay", "default": true, "label": "Auto-rotate slides" },
+    { "type": "range", "id": "autoplay_speed", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 6, "label": "Change every" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 25, "label": "Image overlay" },
+        { "type": "color", "id": "text_color", "default": "#FFFFFF", "label": "Text color" },
+        { "type": "select", "id": "alignment", "label": "Alignment", "options": [
+          { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" }
+        ], "default": "center" },
+        { "type": "text", "id": "subheading", "default": "New Arrivals", "label": "Subheading" },
+        { "type": "text", "id": "heading", "default": "Define Your Style", "label": "Heading" },
+        { "type": "textarea", "id": "text", "default": "Curated pieces for the modern wardrobe.", "label": "Text" },
+        { "type": "text", "id": "button_label", "default": "Shop now", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Hero slider", "blocks": [{ "type": "slide" }, { "type": "slide" }] }
+  ]
+}
+{% endschema %}

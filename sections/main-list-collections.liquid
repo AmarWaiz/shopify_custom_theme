@@ -1,0 +1,32 @@
+<section class="section main-list-collections">
+  <div class="page-width">
+    <h1 class="text-center" style="margin-bottom:2.5rem;">{{ section.settings.heading | default: 'Collections' }}</h1>
+    <div class="grid collection-grid" style="--cols: {{ section.settings.columns }};">
+      {%- for collection in collections -%}
+        <a href="{{ collection.url }}" class="collection-card" data-reveal style="transition-delay: {{ forloop.index0 | times: 0.05 }}s">
+          <div class="collection-card__media media media--ratio">
+            {%- if collection.featured_image -%}
+              <img src="{{ collection.featured_image | image_url: width: 800 }}" alt="{{ collection.title | escape }}" width="400" height="500" loading="lazy">
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <div class="collection-card__overlay">
+              <h3 class="collection-card__title">{{ collection.title }}</h3>
+              <span class="link">{{ collection.all_products_count }} {{ 'collections.all_products' | t | downcase }}</span>
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Collections", "label": "Heading" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "default": 3, "label": "Columns" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,52 @@
+{%- liquid
+  assign blog = blogs[section.settings.blog]
+-%}
+<div class="section blog-posts color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="section-header" data-reveal>
+      {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading }}</h2>{%- endif -%}
+    </div>
+    <div class="grid blog-posts__grid" style="--cols: {{ section.settings.columns }};">
+      {%- if blog.articles_count > 0 -%}
+        {%- for article in blog.articles limit: section.settings.posts_to_show -%}
+          {% render 'article-card', article: article %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..section.settings.posts_to_show) -%}
+          <article class="article-card" data-reveal>
+            <div class="media media--ratio">{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            <div class="article-card__info"><h3 class="h5">Blog post title</h3><p class="text-muted">Your latest stories will appear here.</p></div>
+          </article>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+    {%- if section.settings.show_view_all and blog.url -%}
+      <div class="section-header__cta text-center"><a href="{{ blog.url }}" class="btn btn--secondary">{{ 'general.view_all' | t }}</a></div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .blog-posts__grid { grid-template-columns: repeat(var(--cols, 3), 1fr); }
+  @media (max-width: 749px) { .blog-posts__grid { grid-template-columns: 1fr; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "From the journal", "label": "Heading" },
+    { "type": "blog", "id": "blog", "label": "Blog" },
+    { "type": "range", "id": "posts_to_show", "min": 2, "max": 6, "step": 1, "default": 3, "label": "Posts to show" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "default": 3, "label": "Columns" },
+    { "type": "checkbox", "id": "show_view_all", "default": true, "label": "Show 'View all' button" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "presets": [{ "name": "Blog posts" }]
+}
+{% endschema %}

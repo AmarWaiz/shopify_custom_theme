@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "intro": { "type": "rich-text", "settings": {} },
+    "look1": { "type": "image-with-text", "settings": { "heading": "Look 01" } },
+    "look2": { "type": "image-with-text", "settings": { "heading": "Look 02", "layout": "text-first" } },
+    "look3": { "type": "image-with-text", "settings": { "heading": "Look 03" } },
+    "shop": { "type": "featured-collection", "settings": { "heading": "Shop the looks" } },
+    "instagram": { "type": "instagram-gallery", "settings": {} }
+  },
+  "order": ["intro", "look1", "look2", "look3", "shop", "instagram"]
+}

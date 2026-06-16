@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "intro": { "type": "rich-text", "settings": {} },
+    "steps": { "type": "multicolumn", "settings": { "heading": "How it works" } },
+    "form": { "type": "contact-form", "settings": { "heading": "Join the affiliate program", "button_label": "Apply now" } },
+    "faq": { "type": "faq", "settings": {} }
+  },
+  "order": ["intro", "steps", "form", "faq"]
+}

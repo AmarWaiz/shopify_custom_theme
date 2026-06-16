@@ -1,0 +1,55 @@
+<section class="section recently-viewed" data-recently-viewed hidden
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="section-header"><h2>{{ section.settings.heading }}</h2></div>
+    <div class="grid product-grid" data-rv-grid style="--cols: {{ section.settings.columns }};"></div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var KEY = 'aurora:recently-viewed';
+    var section = document.currentScript.previousElementSibling;
+    var grid = section.querySelector('[data-rv-grid]');
+
+    {%- if request.page_type == 'product' -%}
+      // Record current product
+      try {
+        var list = JSON.parse(localStorage.getItem(KEY) || '[]').filter(function (h) { return h !== {{ product.handle | json }}; });
+        list.unshift({{ product.handle | json }});
+        localStorage.setItem(KEY, JSON.stringify(list.slice(0, 12)));
+      } catch (e) {}
+    {%- endif -%}
+
+    var handles = [];
+    try { handles = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+    handles = handles.filter(function (h) { return h !== {{ product.handle | default: '' | json }}; }).slice(0, {{ section.settings.limit }});
+    if (!handles.length) return;
+
+    Promise.all(handles.map(function (h) {
+      return fetch('/products/' + h + '?section_id=card-product').then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; });
+    })).then(function (htmls) {
+      var out = '';
+      htmls.forEach(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var card = doc.querySelector('.card');
+        if (card) out += card.outerHTML;
+      });
+      if (out) { grid.innerHTML = out; section.removeAttribute('hidden'); grid.querySelectorAll('[data-reveal]').forEach(function (n) { n.classList.add('is-visible'); }); }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Recently viewed",
+  "settings": [
+    { "type": "text", "id": "heading", "default": "Recently viewed", "label": "Heading" },
+    { "type": "range", "id": "limit", "min": 2, "max": 10, "step": 1, "default": 4, "label": "Products to show" },
+    { "type": "range", "id": "columns", "min": 2, "max": 5, "step": 1, "default": 4, "label": "Columns" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "presets": [{ "name": "Recently viewed" }]
+}
+{% endschema %}

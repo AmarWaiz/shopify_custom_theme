@@ -1,0 +1,50 @@
+{%- paginate search.results by 24 -%}
+<section class="section main-search">
+  <div class="page-width">
+    <h1 class="main-search__title">{{ 'search.title' | t }}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="main-search__form">
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" aria-label="{{ 'search.title' | t }}">
+      <button type="submit" class="btn">{{ 'search.submit' | t }}</button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p class="main-search__count text-muted">{{ 'search.results_count_html' | t: count: search.results_count, terms: search.terms }}</p>
+        <div class="grid product-grid main-search__grid">
+          {%- for item in search.results -%}
+            {%- case item.object_type -%}
+              {%- when 'product' -%}{% render 'product-card', product: item %}
+              {%- when 'article' -%}{% render 'article-card', article: item %}
+              {%- when 'page' -%}
+                <a href="{{ item.url }}" class="search-page-card" data-reveal><h3 class="h5">{{ item.title }}</h3><p class="text-muted">{{ item.content | strip_html | truncatewords: 20 }}</p></a>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- else -%}<span class="{% if part.title == paginate.current_page %}is-current{% endif %}">{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <p class="main-search__empty">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% stylesheet %}
+  .main-search__title { margin-bottom: 1.5rem; }
+  .main-search__form { display: flex; gap: 0.5rem; max-width: 560px; margin-bottom: 2rem; }
+  .main-search__form input { flex: 1; padding: 0.95rem 1.1rem; border: 1px solid var(--color-border); border-radius: var(--radius); }
+  .main-search__grid { grid-template-columns: repeat(4, 1fr); margin-top: 1.5rem; }
+  .search-page-card { display: block; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: var(--radius); }
+  .search-page-card:hover { border-color: var(--color-accent); }
+  @media (max-width: 989px) { .main-search__grid { grid-template-columns: repeat(2, 1fr); } }
+{% endstylesheet %}
+
+{% schema %}
+{ "name": "Search results", "settings": [] }
+{% endschema %}

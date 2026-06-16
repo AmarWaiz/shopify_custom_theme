@@ -1,0 +1,49 @@
+{%- paginate blog.articles by section.settings.posts_per_page -%}
+<section class="section main-blog">
+  <div class="page-width">
+    <header class="main-blog__header text-center">
+      <h1>{{ blog.title }}</h1>
+    </header>
+
+    {%- if blog.all_tags.size > 0 and section.settings.show_tags -%}
+      <div class="main-blog__tags">
+        <a href="{{ blog.url }}" class="link{% unless current_tags %} is-active{% endunless %}">{{ 'blog.all_topics' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="link{% if current_tags contains tag %} is-active{% endif %}">{{ tag }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="grid main-blog__grid" style="--cols: {{ section.settings.columns }};">
+      {%- for article in blog.articles -%}{% render 'article-card', article: article %}{%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="pagination" aria-label="Pagination">
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- else -%}<span class="{% if part.title == paginate.current_page %}is-current{% endif %}">{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% stylesheet %}
+  .main-blog__header { margin-bottom: 2rem; }
+  .main-blog__tags { display: flex; flex-wrap: wrap; gap: 1.25rem; justify-content: center; margin-bottom: 2.5rem; }
+  .main-blog__tags .is-active { color: var(--color-accent); }
+  .main-blog__grid { grid-template-columns: repeat(var(--cols, 3), 1fr); }
+  @media (max-width: 749px) { .main-blog__grid { grid-template-columns: 1fr; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [
+    { "type": "checkbox", "id": "show_tags", "default": true, "label": "Show topic filter" },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "default": 3, "label": "Columns" },
+    { "type": "range", "id": "posts_per_page", "min": 6, "max": 24, "step": 3, "default": 12, "label": "Posts per page" }
+  ]
+}
+{% endschema %}

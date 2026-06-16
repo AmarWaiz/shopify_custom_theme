@@ -1,0 +1,68 @@
+{%- comment -%}
+  Generates the global CSS custom properties from theme settings.
+  Rendered once in <head> so every section/snippet shares one token system.
+{%- endcomment -%}
+{% style %}
+  {{ settings.font_heading | font_face: font_display: 'swap' }}
+  {{ settings.font_heading | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ settings.font_body | font_face: font_display: 'swap' }}
+  {{ settings.font_body | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+
+  :root {
+    /* Typography */
+    --font-heading: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
+    --font-body: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+    --font-heading-weight: {{ settings.font_heading.weight | default: 400 }};
+    --font-body-weight: {{ settings.font_body.weight | default: 400 }};
+    --heading-transform: {{ settings.heading_transform }};
+
+    --font-base: {{ settings.font_body_size }}px;
+    {%- assign hs = settings.font_heading_scale | times: 0.01 -%}
+    --font-h1: calc(clamp(2.25rem, 1.4rem + 4vw, 4rem) * {{ hs }});
+    --font-h2: calc(clamp(1.85rem, 1.3rem + 2.6vw, 2.75rem) * {{ hs }});
+    --font-h3: calc(clamp(1.4rem, 1.15rem + 1.3vw, 1.9rem) * {{ hs }});
+    --font-h4: calc(clamp(1.15rem, 1.05rem + 0.6vw, 1.4rem) * {{ hs }});
+    --font-sm: 0.875rem;
+    --font-xs: 0.75rem;
+    --tracking-wide: 0.08em;
+    --tracking-widest: 0.2em;
+
+    /* Colors */
+    --color-bg: {{ settings.color_bg }};
+    --color-bg-soft: {{ settings.color_bg_soft }};
+    --color-text: {{ settings.color_text }};
+    --color-text-soft: {{ settings.color_text_soft }};
+    --color-accent: {{ settings.color_accent }};
+    --color-border: {{ settings.color_border }};
+    --color-btn-bg: {{ settings.color_btn_bg }};
+    --color-btn-text: {{ settings.color_btn_text }};
+    --color-sale: {{ settings.color_sale }};
+    --color-success: {{ settings.color_success }};
+
+    --color-text-rgb: {{ settings.color_text | color_extract: 'red' }}, {{ settings.color_text | color_extract: 'green' }}, {{ settings.color_text | color_extract: 'blue' }};
+    --color-accent-rgb: {{ settings.color_accent | color_extract: 'red' }}, {{ settings.color_accent | color_extract: 'green' }}, {{ settings.color_accent | color_extract: 'blue' }};
+    --color-bg-rgb: {{ settings.color_bg | color_extract: 'red' }}, {{ settings.color_bg | color_extract: 'green' }}, {{ settings.color_bg | color_extract: 'blue' }};
+    --color-accent-soft: rgba(var(--color-accent-rgb), 0.12);
+
+    /* Layout */
+    --page-width: {{ settings.page_width }}px;
+    --page-margin: clamp(1rem, 0.4rem + 2.6vw, 2.5rem);
+    --section-spacing: {{ settings.spacing_sections }}px;
+    --grid-gap: {{ settings.grid_gap }}px;
+    --radius: {{ settings.corner_radius }};
+    --radius-lg: calc({{ settings.corner_radius }} * 2);
+
+    /* Elevation & motion */
+    --shadow-sm: 0 1px 2px rgba(var(--color-text-rgb), 0.05), 0 2px 6px rgba(var(--color-text-rgb), 0.05);
+    --shadow-md: 0 8px 24px rgba(var(--color-text-rgb), 0.09);
+    --shadow-lg: 0 24px 60px rgba(var(--color-text-rgb), 0.14);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+    --t-fast: 0.2s;
+    --t-base: 0.35s;
+    --t-slow: 0.6s;
+
+    /* Product card image ratio */
+    --card-ratio: {% if settings.card_image_ratio == 'adapt' %}auto{% else %}{{ settings.card_image_ratio }}{% endif %};
+  }
+{% endstyle %}

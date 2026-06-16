@@ -1,0 +1,21 @@
+<section class="section main-page">
+  <div class="page-width {% if section.settings.narrow %}page-width--narrow{% endif %}">
+    {%- if section.settings.show_title -%}<h1 class="main-page__title text-center">{{ page.title }}</h1>{%- endif -%}
+    <div class="main-page__content rte">{{ page.content }}</div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .main-page__title { margin-bottom: 2rem; }
+  .main-page__content { font-size: 1.05rem; line-height: 1.8; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page",
+  "settings": [
+    { "type": "checkbox", "id": "show_title", "default": true, "label": "Show page title" },
+    { "type": "checkbox", "id": "narrow", "default": true, "label": "Narrow content width" }
+  ]
+}
+{% endschema %}

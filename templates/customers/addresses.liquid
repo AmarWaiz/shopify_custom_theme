@@ -1,0 +1,36 @@
+<div class="account page-width">
+  <h1 style="text-align:left;">{{ 'customers.addresses.title' | t }}</h1>
+  <p><a href="{{ routes.account_url }}" class="link">← {{ 'customers.account.title' | t }}</a></p>
+
+  <details style="margin:1.5rem 0;">
+    <summary class="btn btn--sm" style="display:inline-flex;">{{ 'customers.addresses.add' | t }}</summary>
+    <div style="margin-top:1.5rem; max-width:560px;">
+      {%- form 'customer_address', customer.new_address -%}
+        {% render 'address-fields', form: form %}
+        <button type="submit" class="btn">{{ 'customers.addresses.save' | t }}</button>
+      {%- endform -%}
+    </div>
+  </details>
+
+  <div class="address-grid">
+    {%- for address in customer.addresses -%}
+      <div class="address-card">
+        {%- if address == customer.default_address -%}<p class="eyebrow">{{ 'customers.addresses.default' | t }}</p>{%- endif -%}
+        <address class="rte">{{ address | format_address }}</address>
+        <div style="display:flex; gap:1rem; margin-top:0.75rem;">
+          <details>
+            <summary class="link">{{ 'customers.addresses.edit' | t }}</summary>
+            <div style="margin-top:1rem;">
+              {%- form 'customer_address', address -%}
+                {% render 'address-fields', form: form %}
+                <button type="submit" class="btn btn--sm">{{ 'customers.addresses.save' | t }}</button>
+              {%- endform -%}
+            </div>
+          </details>
+          <a href="#" class="link" data-confirm="true" onclick="if(confirm('Delete?')){Shopify.postLink('{{ address.url }}',{parameters:{_method:'delete'}});}return false;">{{ 'customers.addresses.delete' | t }}</a>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>

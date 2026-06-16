@@ -1,0 +1,55 @@
+<div class="section image-with-text color-{{ section.settings.color_scheme }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
+    <div class="iwt iwt--{{ section.settings.layout }}" data-reveal>
+      <div class="iwt__media media">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 1200 }}"
+               srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 1200 }} 1200w"
+               sizes="(min-width: 990px) 50vw, 100vw" alt="{{ section.settings.heading | escape }}"
+               width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}" loading="lazy">
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      <div class="iwt__content">
+        {%- if section.settings.subheading != blank -%}<p class="eyebrow">{{ section.settings.subheading }}</p>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading }}</h2>{%- endif -%}
+        {%- if section.settings.text != blank -%}<div class="rte">{{ section.settings.text }}</div>{%- endif -%}
+        {%- if section.settings.button_label != blank -%}<a href="{{ section.settings.button_link }}" class="btn iwt__btn">{{ section.settings.button_label }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .iwt { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); }
+  .iwt--text-first .iwt__media { order: 2; }
+  .iwt__media { aspect-ratio: 4 / 3; }
+  .iwt__content > * + * { margin-top: 1rem; }
+  .iwt__btn { margin-top: 0.5rem; }
+  @media (max-width: 749px) { .iwt { grid-template-columns: 1fr; } .iwt--text-first .iwt__media { order: 0; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Image with text",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "layout", "label": "Layout", "options": [
+      { "value": "image-first", "label": "Image left" }, { "value": "text-first", "label": "Image right" }
+    ], "default": "image-first" },
+    { "type": "text", "id": "subheading", "default": "Promotion", "label": "Subheading" },
+    { "type": "text", "id": "heading", "default": "Tell your story", "label": "Heading" },
+    { "type": "richtext", "id": "text", "default": "<p>Pair text with an image to highlight a product, collection, or feature.</p>", "label": "Text" },
+    { "type": "text", "id": "button_label", "default": "Shop now", "label": "Button label" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Appearance" },
+    { "type": "select", "id": "color_scheme", "label": "Color scheme", "options": [
+      { "value": "default", "label": "Default" }, { "value": "soft", "label": "Soft" }, { "value": "dark", "label": "Dark" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding top" },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64, "label": "Padding bottom" }
+  ],
+  "presets": [{ "name": "Image with text" }]
+}
+{% endschema %}
